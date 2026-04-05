@@ -113,12 +113,13 @@ This installs both backend and frontend dependencies in one command.
 Create a file called `.env` inside the `backend/` folder:
 
 ```
-MONGO_URI=mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@cluster.mongodb.net/settleUp
-JWT_SECRET=your_secret_key_here
+MONGO_URI=ongodb+srv://username:pass@cluster0.ygzsphl.mongodb.net/settleup?retryWrites=true&w=majority&appName=Cluster0
+JWT_SECRET=please contact the author
 PORT=5000
 ```
+> please contact author for the user name and password
 
-> Get your MongoDB connection string from [MongoDB Atlas](https://cloud.mongodb.com).
+> Get your MongoDB connection string from [MongoDB Atlas](https://cloud.mongodb.com/v2/69cb10e12dc4a94bd791d4eb#/explorer/69cb11b74210f1537d22121f/settleup)
 
 ### Step 4 — Run the project locally
 
@@ -199,6 +200,4 @@ See `.github/workflows/backend-ci.yml` for the full pipeline configuration.
 
 ---
 
-## Use of Gen-AI
 
-Claude (Anthropic) was used during this assessment for code scaffolding, test case writing, and documentation. All generated code was reviewed, tested, and adapted to match the IFN636 starter project conventions.
