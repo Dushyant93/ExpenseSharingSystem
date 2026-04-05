@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth');  // existing JWT middleware
+const auth = require('../middleware/auth');
 const {
   createExpense, getExpenses, getExpenseById, updateExpense, deleteExpense
 } = require('../controllers/expenseController');
