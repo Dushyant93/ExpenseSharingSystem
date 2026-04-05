@@ -87,7 +87,7 @@ const AddExpense = () => {
 
           <form onSubmit={handleSubmit}>
 
-            {/* Group picker */}
+            {/* Group picker. */}
             <div className="field-group">
               <label>Group</label>
               <select name="groupId" value={formData.groupId} onChange={handleChange} required>

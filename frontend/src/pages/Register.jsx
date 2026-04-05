@@ -50,7 +50,7 @@ const Register = () => {
     <div className="auth-container">
       <div className="auth-card">
 
-        {/* App logo */}
+        {/* App logo. */}
         <div className="auth-logo">
           <h1>💸 SettleUp</h1>
           <p>Split expenses with friends, simply.</p>

@@ -5,7 +5,7 @@ import axios from 'axios';
 const Login = () => {
   const navigate = useNavigate();
 
-  // Form state
+  // Form state.
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error,    setError   ] = useState('');
   const [loading,  setLoading ] = useState(false);

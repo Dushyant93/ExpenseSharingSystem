@@ -24,7 +24,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/expenses" element={<ExpenseList />} />
         <Route path="/expenses/add" element={<AddExpense />} />
-        <Route path="/expenses/:id/edit" element={<EditExpense />} />
+        <Route path="/expenses/edit/:id" element={<EditExpense />} />
 
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={ <Dashboard /> } />

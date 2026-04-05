@@ -101,7 +101,7 @@ const EditExpense = () => {
               />
             </div>
 
-            {/* Amount */}
+            {/* Amount. */}
             <div className="field-group">
               <label>Amount ($)</label>
               <input

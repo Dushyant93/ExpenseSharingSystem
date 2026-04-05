@@ -26,7 +26,7 @@ const EditGroup = () => {
     headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
   });
 
-  // Load existing group data to pre-fill the form
+  // Load existing group data to pre-fill the form.
   useEffect(() => {
     const fetchGroup = async () => {
       try {

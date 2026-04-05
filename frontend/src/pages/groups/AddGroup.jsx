@@ -69,7 +69,7 @@ const AddGroup = () => {
 
           <form onSubmit={handleSubmit}>
 
-            {/* Icon picker */}
+            {/* Icon picker. */}
             <div className="field-group">
               <label>Group Icon</label>
               <select name="icon" value={formData.icon} onChange={handleChange}>

@@ -114,7 +114,7 @@ const ExpenseList = () => {
                   </div>
                 </div>
 
-                {/* Right: amount and action buttons */}
+                {/* Right: amount and action buttons. */}
                 <div style={styles.right}>
                   <div style={styles.amount}>${expense.amount.toFixed(2)}</div>
                   <div className="card-actions">

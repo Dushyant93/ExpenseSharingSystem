@@ -1,6 +1,3 @@
-// GroupList Page - shows all groups for the logged-in user
-// Allows editing and deleting each group
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';

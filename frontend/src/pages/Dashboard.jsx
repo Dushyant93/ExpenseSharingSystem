@@ -1,6 +1,3 @@
-// Dashboard Page - shown after login
-// Displays a summary of the user's groups and recent expenses
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
