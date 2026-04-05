@@ -1,28 +1,48 @@
-name: CI
+name: SettleUp CI
 
 on:
-    push:
-        branches:
-            - main
-    pull_request:
-        branches:
-            - main
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  test:
+    name: Run Tests
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        node-version: [22]
+    environment: MONGO_URI
 
-        steps:
-        - name: Checkout code
-            uses: actions/checkout@v2
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-        - name: Set up Node.js
-            uses: actions/setup-node@v2
-            with:
-                node-version: '14'
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
 
-        - name: Install dependencies
-            run: npm install
+      - name: Install Dependencies
+        working-directory: ./backend
+        run: npm install
 
-        - name: Run tests
-            run: npm test
+      - name: Print Env Secret
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+        run: echo "MONGO_URI is set"
+
+      - name: Run Tests
+        working-directory: ./backend
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        run: npm test
+
+      - name: Restart PM2
+        run: |
+          cd ~/actions-runner/_work/sampleapp_IFQ636/sampleapp_IFQ636/backend
+          pm2 restart backend || pm2 start server.js --name backend
+          cd ../frontend
+          pm2 restart frontend || pm2 start --name frontend npx -- react-scripts start
