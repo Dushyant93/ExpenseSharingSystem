@@ -5,6 +5,7 @@ const groupSchema = new mongoose.Schema(
     name: { type: String, required: [true, 'Group name is required'], trim: true},
     description: { type: String, trim: true, default: ''},
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
+    icon: { type: String, default: '👥' },
     members: [ { type: mongoose.Schema.Types.ObjectId, ref: 'User'} ]
   },
   {

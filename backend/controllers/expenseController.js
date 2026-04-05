@@ -2,7 +2,7 @@ const Expense = require('../models/Expense');
 
 // CREATE - POST /api/expenses
 const createExpense = async (req, res) => {
-  const { groupId, description, amount, category, date } = req.body;
+  const { groupId, description, amount, category, date, splitBetween } = req.body;
   try {
     const expense = await Expense.create({
       paidBy: req.user.id,
@@ -43,19 +43,12 @@ const getExpenseById = async (req, res) => {
 
 // UPDATE - PUT /api/expenses/:id
 const updateExpense = async (req, res) => {
-  const { description, amount, category, date } = req.body;
   try {
-    const expense = await Expense.findById(req.params.id);
+    const expense = await Expense.findByIdAndUpdate(
+      req.params.id, req.body, { new: true, runValidators: true }
+    );
     if (!expense) return res.status(404).json({ message: 'Expense not found' });
-
-    // Only update those fields that were sent in the request
-    expense.description = description || expense.description;
-    expense.amount = amount || expense.amount;
-    expense.category = category || expense.category;
-    expense.date = date || expense.date;
-
-    const updatedExpense = await expense.save();
-    res.json(updatedExpense);
+    res.status(200).json(expense);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -64,11 +57,9 @@ const updateExpense = async (req, res) => {
 // DELETE - DELETE /api/expenses/:id
 const deleteExpense = async (req, res) => {
   try {
-    const expense = await Expense.findById(req.params.id);
+    const expense = await Expense.findByIdAndDelete(req.params.id);
     if (!expense) return res.status(404).json({ message: 'Expense not found' });
-
-    await expense.deleteOne();
-    res.json({ message: 'Expense deleted successfully' });
+    res.status(200).json({ message: 'Expense deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
