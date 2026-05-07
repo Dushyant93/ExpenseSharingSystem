@@ -1,41 +1,55 @@
-// EditExpense Page - form to update an existing expense
-// Loads the current expense data and pre-fills the form
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../axiosConfig';
 import Navbar from '../../components/Navbar';
 
 const EditExpense = () => {
-  const navigate    = useNavigate();
-  const { id }      = useParams(); // expense ID from URL
+  const navigate = useNavigate();
+  const { id }   = useParams();
 
   const [formData, setFormData] = useState({
-    description: '',
-    amount:      '',
-    category:    'General',
-    date:        '',
+    groupId:      '',
+    description:  '',
+    amount:       '',
+    category:     'General',
+    date:         '',
+    splitBetween: '',
+    splitType:    'equal',
   });
-  const [error,   setError  ] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [groups,   setGroups  ] = useState([]);
+  const [error,    setError   ] = useState('');
+  const [loading,  setLoading ] = useState(false);
   const [fetching, setFetching] = useState(true);
 
-  // It's an Helper to attach JWT to every request
   const authConfig = () => ({
     headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
   });
 
-  // Load existing expense data to pre-fill the form
+  // Load groups and existing expense data at the same time
   useEffect(() => {
-    const fetchExpense = async () => {
+    const fetchData = async () => {
       try {
-        const res = await axios.get(`/api/expenses/${id}`, authConfig());
-        const exp = res.data;
+        // Fetch both in parallel
+        const [expenseRes, groupsRes] = await Promise.all([
+          axios.get(`/api/expenses/${id}`, authConfig()),
+          axios.get('/api/groups', authConfig()),
+        ]);
+
+        const exp    = expenseRes.data.data || expenseRes.data;
+        const groups = groupsRes.data.data  || groupsRes.data;
+
+        setGroups(groups);
+
         setFormData({
-          description: exp.description,
-          amount:      exp.amount,
-          category:    exp.category,
-          date:        exp.date.split('T')[0], // format as YYYY-MM-DD for input
+          groupId:      exp.groupId?._id || exp.groupId || '',
+          description:  exp.description  || '',
+          amount:       exp.amount        || '',
+          category:     exp.category      || 'General',
+          date:         exp.date ? exp.date.split('T')[0] : '',
+          splitBetween: Array.isArray(exp.splitBetween)
+                          ? exp.splitBetween.join(', ')
+                          : exp.splitBetween || '',
+          splitType:    exp.splitType || 'equal',
         });
       } catch (err) {
         if (err.response?.status === 401) navigate('/login');
@@ -44,23 +58,26 @@ const EditExpense = () => {
         setFetching(false);
       }
     };
-    fetchExpense();
+    fetchData();
   }, [id, navigate]);
 
-  // Update state when user types
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Submit updated data
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
-
     try {
-      await axios.put(`/api/expenses/${id}`, formData, authConfig());
-      navigate('/expenses'); // go back to list after saving
+      await axios.put(`/api/expenses/${id}`, {
+        ...formData,
+        splitBetween: formData.splitBetween
+          .split(',')
+          .map((n) => n.trim())
+          .filter((n) => n !== ''),
+      }, authConfig());
+      navigate('/expenses');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to update expense.');
     } finally {
@@ -75,7 +92,6 @@ const EditExpense = () => {
       <Navbar />
       <div className="page-wrapper">
 
-        {/* Header */}
         <div className="page-header">
           <div>
             <h2>✏️ Edit Expense</h2>
@@ -88,32 +104,29 @@ const EditExpense = () => {
 
           <form onSubmit={handleSubmit}>
 
+            {/* Group dropdown */}
+            <div className="field-group">
+              <label>Group</label>
+              <select name="groupId" value={formData.groupId} onChange={handleChange} required>
+                <option value="">— Select a group —</option>
+                {groups.map((g) => (
+                  <option key={g._id} value={g._id}>{g.icon} {g.name}</option>
+                ))}
+              </select>
+            </div>
+
             {/* Description */}
             <div className="field-group">
               <label>Description</label>
-              <input
-                type="text"
-                name="description"
-                placeholder="e.g. Woolies groceries"
-                value={formData.description}
-                onChange={handleChange}
-                required
-              />
+              <input type="text" name="description" placeholder="e.g. Woolies groceries"
+                value={formData.description} onChange={handleChange} required />
             </div>
 
-            {/* Amount. */}
+            {/* Amount */}
             <div className="field-group">
               <label>Amount ($)</label>
-              <input
-                type="number"
-                name="amount"
-                placeholder="0.00"
-                min="0.01"
-                step="0.01"
-                value={formData.amount}
-                onChange={handleChange}
-                required
-              />
+              <input type="number" name="amount" placeholder="0.00"
+                min="0.01" step="0.01" value={formData.amount} onChange={handleChange} required />
             </div>
 
             {/* Category */}
@@ -133,30 +146,37 @@ const EditExpense = () => {
             {/* Date */}
             <div className="field-group">
               <label>Date</label>
-              <input
-                type="date"
-                name="date"
-                value={formData.date}
-                onChange={handleChange}
-                required
-              />
+              <input type="date" name="date" value={formData.date}
+                onChange={handleChange} required />
+            </div>
+
+            {/* Split Type - Strategy pattern */}
+            <div className="field-group">
+              <label>Split Type</label>
+              <select name="splitType" value={formData.splitType} onChange={handleChange}>
+                <option value="equal">⚖️ Equal Split — everyone pays the same</option>
+                <option value="percentage">% Percentage Split — custom percentages</option>
+                <option value="exact">💲 Exact Split — specific amounts per person</option>
+              </select>
+            </div>
+
+            {/* Split Between */}
+            <div className="field-group">
+              <label>Split Between (comma separated names)</label>
+              <input type="text" name="splitBetween"
+                placeholder="e.g. Alex, Jessica, Marcus"
+                value={formData.splitBetween} onChange={handleChange} />
             </div>
 
             {/* Buttons */}
             <div style={styles.btnRow}>
-              <button
-                type="button"
-                className="btn-secondary"
-                onClick={() => navigate('/expenses')}
-              >
+              <button type="button" className="btn-secondary"
+                onClick={() => navigate('/expenses')}>
                 Cancel
               </button>
-              <button
-                type="submit"
-                className="btn-primary"
+              <button type="submit" className="btn-primary"
                 style={{ width: 'auto', padding: '12px 32px', marginTop: 0 }}
-                disabled={loading}
-              >
+                disabled={loading}>
                 {loading ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
@@ -168,12 +188,7 @@ const EditExpense = () => {
 };
 
 const styles = {
-  btnRow: {
-    display:        'flex',
-    justifyContent: 'flex-end',
-    gap:            '12px',
-    marginTop:      '24px',
-  },
+  btnRow: { display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '24px' },
 };
 
 export default EditExpense;
