@@ -12,6 +12,12 @@ import GroupList from './pages/groups/GroupList';
 import AddGroup  from './pages/groups/AddGroup';
 import EditGroup from './pages/groups/EditGroup';
 
+// Settlement pages
+import BalanceDashboard from './pages/settlements/BalanceDashboard';
+import AddSettlement    from './pages/settlements/AddSettlement';
+import SettlementList from './pages/settlements/SettlementList';
+
+
 import './index.css';
 
 function App() {
@@ -32,6 +38,10 @@ function App() {
         <Route path="/groups" element={ <GroupList /> } />
         <Route path="/groups/add" element={ <AddGroup /> } />
         <Route path="/groups/edit/:id" element={ <EditGroup /> } />
+
+        <Route path="/settlements/balances/:groupId" element={<BalanceDashboard />} />
+        <Route path="/settlements/add/:groupId"      element={<AddSettlement />} />
+        <Route path="/settlements/:groupId" element={<SettlementList />} />
 
         {/* redirect unknown URLs to dashboard */}
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
