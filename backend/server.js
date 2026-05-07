@@ -14,6 +14,7 @@ app.use(express.json());
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/expenses', require('./routes/expenses'));
 app.use('/api/groups', require('./routes/groups'));
+app.use('/api/settlements', require('./routes/settlements'));
 
 // Health Check api, Used to verify the server is running
 app.get('/api/health', (req, res) => {
