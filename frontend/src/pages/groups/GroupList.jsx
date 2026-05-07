@@ -6,9 +6,9 @@ import Navbar from '../../components/Navbar';
 const GroupList = () => {
   const navigate = useNavigate();
 
-  const [groups,  setGroups ] = useState([]);
+  const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error,   setError  ] = useState('');
+  const [error, setError] = useState('');
 
   // Helper to attach JWT to every request
   const authConfig = () => ({
@@ -23,7 +23,7 @@ const GroupList = () => {
   const fetchGroups = async () => {
     try {
       const res = await axios.get('/api/groups', authConfig());
-      setGroups(res.data);
+      setGroups(res.data.data || res.data)
     } catch (err) {
       if (err.response?.status === 401) navigate('/login');
       else setError('Failed to load groups.');
@@ -106,6 +106,12 @@ const GroupList = () => {
                 <div className="card-actions">
                   <button
                     className="btn-secondary"
+                    onClick={() => navigate(`/settlements/balances/${group._id}`)}
+                  >
+                    Balances
+                  </button>
+                  <button
+                    className="btn-secondary"
                     onClick={() => navigate(`/groups/edit/${group._id}`)}
                   >
                     Edit
@@ -129,10 +135,10 @@ const GroupList = () => {
 
 const styles = {
   left: {
-    display:    'flex',
+    display: 'flex',
     alignItems: 'center',
-    gap:        '14px',
-    flex:       1,
+    gap: '14px',
+    flex: 1,
   },
   icon: { fontSize: '32px' },
   name: { fontSize: '15px', fontWeight: 700, color: '#1A1A1A' },
