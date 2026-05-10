@@ -1,7 +1,7 @@
 // Response Factory - Factory Design Pattern
 //
 // PATTERN: Factory
-// WHAT IT DOES: Creates consistent API response objects without the controller 
+// WHAT IT DOES: Creates consistent API response objects without the controller
 // needing to know the exact structure of the response.
 //
 // WHY WE USE IT: Without this, every controller builds its own response format.
