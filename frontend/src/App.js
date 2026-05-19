@@ -12,12 +12,14 @@ import GroupList from './pages/groups/GroupList';
 import AddGroup  from './pages/groups/AddGroup';
 import EditGroup from './pages/groups/EditGroup';
 
+// Notification page
+import Notifications from './pages/notifications/Notifications';
+
 import './index.css';
 
 function App() {
   return (
     <Router>
-      backend/middleware/authMiddleware.js
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -32,6 +34,9 @@ function App() {
         <Route path="/groups" element={ <GroupList /> } />
         <Route path="/groups/add" element={ <AddGroup /> } />
         <Route path="/groups/edit/:id" element={ <EditGroup /> } />
+
+        {/* Notification route */}
+        <Route path="/notifications" element={<Notifications />} />
 
         {/* redirect unknown URLs to dashboard */}
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
