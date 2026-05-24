@@ -22,13 +22,13 @@ import BalanceDashboard from './pages/settlements/BalanceDashboard';
 import AddSettlement    from './pages/settlements/AddSettlement';
 import SettlementList from './pages/settlements/SettlementList';
 
-// Notification page
-import Notifications from './pages/notifications/Notifications';
-
 // Profile pages
 import Profile        from './pages/profile/Profile';
 import EditProfile    from './pages/profile/EditProfile';
 import ChangePassword from './pages/profile/ChangePassword';
+
+// Notification page
+import Notifications from './pages/notifications/Notifications';
 
 import './index.css';
 
@@ -56,14 +56,15 @@ function App() {
         <Route path="/settlements/add/:groupId"      element={<AddSettlement />} />
         <Route path="/settlements/:groupId" element={<SettlementList />} />
 
-        {/* NEW: Notification route */}
-        <Route path="/notifications" element={<Notifications />} />
-
         {/* NEW: Profile routes */}
         <Route path="/profile"                 element={<Profile />} />
         <Route path="/profile/edit"            element={<EditProfile />} />
         <Route path="/profile/change-password" element={<ChangePassword />} />
 
+        {/* Notification route */}
+        <Route path="/notifications" element={<Notifications />} />
+
+        {/* redirect unknown URLs to dashboard */}
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Router>
