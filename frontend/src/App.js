@@ -64,6 +64,10 @@ function App() {
         {/* Notification route */}
         <Route path="/notifications" element={<Notifications />} />
 
+        <Route path="/settlements/balances/:groupId" element={<BalanceDashboard />} />
+        <Route path="/settlements/add/:groupId"      element={<AddSettlement />} />
+        <Route path="/settlements/:groupId" element={<SettlementList />} />
+
         {/* redirect unknown URLs to dashboard */}
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
