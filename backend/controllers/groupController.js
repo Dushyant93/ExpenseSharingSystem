@@ -17,7 +17,9 @@ const getGroups = async (req, res) => {
 // Returns one group by its ID
 const getGroupById = async (req, res) => {
   try {
-    const group = await Group.findById(req.params.id).populate('createdBy', 'username');
+    const group = await Group.findById(req.params.id)
+    .populate('createdBy', 'username')
+    .populate('members', 'name email');
     if (!group) return res.status(404).json({ message: 'Group not found' });
     res.json(group);
   } catch (error) {
@@ -28,14 +30,21 @@ const getGroupById = async (req, res) => {
 // CREATE GROUP
 // Creates a new group and adds creator as first member
 const createGroup = async (req, res) => {
-  const { name, description, icon } = req.body;
+  const { name, description, icon, memberIds } = req.body;
   try {
+    // Start with creator, then add any extra members
+    const allMembers = [req.user.id];
+    if (memberIds && Array.isArray(memberIds)) {
+      memberIds.forEach((id) => {
+        if (id !== req.user.id.toString()) {
+          allMembers.push(id);
+        }
+      });
+    }
     const group = await Group.create({
-      name,
-      description,
-      icon,
-      createdBy: req.user.id,        // from JWT middleware - same as tutorial
-      members: [req.user.id],        // creator is automatically the first member
+      name, description, icon,
+      createdBy: req.user.id,
+      members: allMembers,
     });
     res.status(201).json(group);
   } catch (error) {
@@ -77,4 +86,35 @@ const deleteGroup = async (req, res) => {
   }
 };
 
-module.exports = { getGroups, getGroupById, createGroup, updateGroup, deleteGroup };
+// ADD MEMBER TO GROUP - POST /api/groups/:id/members
+const addMember = async (req, res) => {
+  const { email } = req.body;
+  try {
+    // Find the user by email
+    const User  = require('../models/User');
+    const user  = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: 'No user found with that email' });
+
+    // Find the group
+    const group = await Group.findById(req.params.id);
+    if (!group) return res.status(404).json({ message: 'Group not found' });
+
+    // Check if already a member
+    const alreadyMember = group.members.some(
+      (m) => m.toString() === user._id.toString()
+    );
+    if (alreadyMember) {
+      return res.status(400).json({ message: 'User is already a member of this group' });
+    }
+
+    // Add the user to members
+    group.members.push(user._id);
+    await group.save();
+
+    res.json({ message: `${user.name} added to the group successfully` });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { getGroups, getGroupById, createGroup, updateGroup, deleteGroup, addMember };
