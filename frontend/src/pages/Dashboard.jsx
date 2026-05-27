@@ -24,8 +24,8 @@ const Dashboard = () => {
           axios.get('/api/expenses', config),
         ]);
 
-        setGroups(groupsRes.data);
-        setExpenses(expensesRes.data);
+        setExpenses(expensesRes.data.data || expensesRes.data);
+        setGroups(groupsRes.data.data || groupsRes.data);
       } catch (err) {
         // If token expired, send back to login
         if (err.response?.status === 401) navigate('/login');
