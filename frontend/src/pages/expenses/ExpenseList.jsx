@@ -26,7 +26,7 @@ const ExpenseList = () => {
   const fetchExpenses = async () => {
     try {
       const res = await axios.get('/api/expenses', authConfig());
-      setExpenses(res.data);
+      setExpenses(res.data.data || res.data || []);
     } catch (err) {
       if (err.response?.status === 401) navigate('/login');
       else setError('Failed to load expenses.');
