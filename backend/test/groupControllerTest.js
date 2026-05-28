@@ -6,6 +6,8 @@ const chai = require('chai');
 const sinon = require('sinon');
 const mongoose = require('mongoose');
 const Group = require('../models/Group');
+const User = require('../models/User');
+const { addMember } = require('../controllers/groupController');
 const {
   getGroups, getGroupById, createGroup, updateGroup, deleteGroup,
 } = require('../controllers/groupController');
@@ -215,4 +217,115 @@ describe('Group Controller Tests', () => {
     });
   });
 
+});
+
+describe('getGroupById', () => {
+  let localSandbox;
+  beforeEach(() => { localSandbox = sinon.createSandbox(); });
+  afterEach(()  => { localSandbox.restore(); });
+ 
+  it('should return a group by ID', async () => {
+    const mockId    = new mongoose.Types.ObjectId();
+    const mockGroup = { _id: mockId, name: 'Brisbane Flat', members: [] };
+ 
+    // Controller chains .populate('createdBy').populate('members')
+    localSandbox.stub(Group, 'findById').returns({
+      populate: sinon.stub().returns({
+        populate: sinon.stub().resolves(mockGroup),
+      }),
+    });
+ 
+    const res = { status: sinon.stub().returnsThis(), json: sinon.spy() };
+ 
+    await getGroupById({ params: { id: mockId } }, res);
+ 
+    expect(res.json.calledOnce).to.be.true;
+  });
+ 
+  it('should return 404 if group does not exist', async () => {
+    localSandbox.stub(Group, 'findById').returns({
+      populate: sinon.stub().returns({
+        populate: sinon.stub().resolves(null),
+      }),
+    });
+ 
+    const res = { status: sinon.stub().returnsThis(), json: sinon.spy() };
+ 
+    await getGroupById({ params: { id: new mongoose.Types.ObjectId() } }, res);
+ 
+    expect(res.status.calledWith(404)).to.be.true;
+  });
+});
+ 
+describe('addMember', () => {
+  let localSandbox;
+  beforeEach(() => { localSandbox = sinon.createSandbox(); });
+  afterEach(()  => { localSandbox.restore(); });
+ 
+  // Controller: takes { email }, calls User.findOne({ email }), then Group.findById
+  it('should add a new member to the group', async () => {
+    const mockUserId  = new mongoose.Types.ObjectId();
+    const mockGroupId = new mongoose.Types.ObjectId();
+ 
+    const mockUser  = { _id: mockUserId, name: 'New Member' };
+    const mockGroup = {
+      _id:     mockGroupId,
+      members: { some: sinon.stub().returns(false), push: sinon.stub() },
+      save:    sinon.stub().resolves(),
+    };
+ 
+    localSandbox.stub(User,  'findOne' ).resolves(mockUser);
+    localSandbox.stub(Group, 'findById').resolves(mockGroup);
+ 
+    const req = { params: { id: mockGroupId }, body: { email: 'newmember@test.com' } };
+    const res = { status: sinon.stub().returnsThis(), json: sinon.spy() };
+ 
+    await addMember(req, res);
+ 
+    expect(res.json.calledOnce).to.be.true;
+  });
+ 
+  it('should return 404 if no user found with that email', async () => {
+    localSandbox.stub(User, 'findOne').resolves(null);
+ 
+    const req = { params: { id: new mongoose.Types.ObjectId() }, body: { email: 'ghost@test.com' } };
+    const res = { status: sinon.stub().returnsThis(), json: sinon.spy() };
+ 
+    await addMember(req, res);
+ 
+    expect(res.status.calledWith(404)).to.be.true;
+  });
+ 
+  it('should return 404 if group is not found when adding member', async () => {
+    localSandbox.stub(User,  'findOne' ).resolves({ _id: new mongoose.Types.ObjectId(), name: 'Someone' });
+    localSandbox.stub(Group, 'findById').resolves(null);
+ 
+    const req = { params: { id: new mongoose.Types.ObjectId() }, body: { email: 'someone@test.com' } };
+    const res = { status: sinon.stub().returnsThis(), json: sinon.spy() };
+ 
+    await addMember(req, res);
+ 
+    expect(res.status.calledWith(404)).to.be.true;
+  });
+ 
+  it('should return 400 if user is already a member of the group', async () => {
+    const existingId = new mongoose.Types.ObjectId();
+ 
+    const mockUser  = { _id: existingId, name: 'Existing Member' };
+    // members.some() returns true = already in the group
+    const mockGroup = {
+      members: { some: sinon.stub().returns(true) },
+      save:    sinon.stub().resolves(),
+    };
+ 
+    localSandbox.stub(User,  'findOne' ).resolves(mockUser);
+    localSandbox.stub(Group, 'findById').resolves(mockGroup);
+ 
+    const req = { params: { id: new mongoose.Types.ObjectId() }, body: { email: 'existing@test.com' } };
+    const res = { status: sinon.stub().returnsThis(), json: sinon.spy() };
+ 
+    await addMember(req, res);
+ 
+    expect(res.status.calledWith(400)).to.be.true;
+  });
 });
