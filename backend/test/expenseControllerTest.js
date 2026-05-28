@@ -6,6 +6,7 @@ const sinon  = require('sinon');
 const mongoose = require('mongoose');
 const Expense  = require('../models/Expense');
 const { expenseEmitter } = require('../utils/notificationObserver');
+const { getExpenseById } = require('../controllers/expenseController');
 const {
   createExpense, getExpenses, updateExpense, deleteExpense
 } = require('../controllers/expenseController');
@@ -172,4 +173,37 @@ describe('Expense Controller Tests', () => {
     });
   });
 
+});
+
+describe('getExpenseById', () => {
+ 
+  it('should return a single expense by ID', async () => {
+    const mockId      = new mongoose.Types.ObjectId();
+    const req         = { params: { id: mockId } };
+    const mockExpense = { _id: mockId, description: 'Woolies groceries', amount: 64 };
+ 
+    sandbox.stub(Expense, 'findById').returns({
+      populate: sinon.stub().resolves(mockExpense),
+    });
+ 
+    const res = { status: sinon.stub().returnsThis(), json: sinon.spy() };
+ 
+    await getExpenseById(req, res);
+ 
+    expect(res.json.calledOnce).to.be.true;
+  });
+ 
+  it('should return 404 if expense does not exist', async () => {
+    const req = { params: { id: new mongoose.Types.ObjectId() } };
+ 
+    sandbox.stub(Expense, 'findById').returns({
+      populate: sinon.stub().resolves(null),
+    });
+ 
+    const res = { status: sinon.stub().returnsThis(), json: sinon.spy() };
+ 
+    await getExpenseById(req, res);
+ 
+    expect(res.status.calledWith(404)).to.be.true;
+  });
 });
