@@ -20,7 +20,7 @@ afterEach(()  => { sandbox.restore(); });
 
 describe('Profile Controller Tests', () => {
 
-  // ── getProfile ───────────────────────────────────────────────
+  //  getProfile 
   // Controller: findById().select('-password') + countDocuments x2 + find
   describe('getProfile', () => {
 
@@ -72,7 +72,7 @@ describe('Profile Controller Tests', () => {
     });
   });
 
-  // ── updateProfile ────────────────────────────────────────────
+  //  updateProfile 
   // Controller: findById() directly (no .select), then user.save()
   describe('updateProfile', () => {
 
@@ -108,7 +108,7 @@ describe('Profile Controller Tests', () => {
     });
   });
 
-  // ── changePassword ───────────────────────────────────────────
+  //  changePassword 
   // Controller: findById() directly, bcrypt.compare, user.save()
   describe('changePassword', () => {
 

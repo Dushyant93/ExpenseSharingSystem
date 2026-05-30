@@ -38,7 +38,7 @@ const stubExpenseFind = (sandbox, resolvedData) => {
 
 describe('SettleUp Service Tests (Facade Pattern)', () => {
 
-  // ── Test 1: calculateGroupBalances — Equal split ─────────────
+  // Test 1: calculateGroupBalances — Equal split
   describe('calculateGroupBalances', () => {
     it('should calculate correct net balances for equal split expenses', async () => {
       const groupId = new mongoose.Types.ObjectId();
@@ -65,7 +65,7 @@ describe('SettleUp Service Tests (Facade Pattern)', () => {
       expect(result.balances['Marcus']).to.equal(-30);
     });
 
-    // ── Test 2: calculateGroupBalances — Percentage split ────────
+    //  Test 2: calculateGroupBalances — Percentage split 
     it('should use splitResult for percentage split expenses', async () => {
       const groupId = new mongoose.Types.ObjectId();
 
@@ -91,7 +91,7 @@ describe('SettleUp Service Tests (Facade Pattern)', () => {
       expect(result.balances['Jessica']).to.equal(-40);
     });
 
-    // ── Test 3: calculateGroupBalances — Settlement offsets balance
+    //  Test 3: calculateGroupBalances — Settlement offsets balance
     it('should reduce balance when a settlement is recorded', async () => {
       const groupId   = new mongoose.Types.ObjectId();
       const alexId    = new mongoose.Types.ObjectId();
@@ -122,7 +122,7 @@ describe('SettleUp Service Tests (Facade Pattern)', () => {
       expect(result.balances['Jessica']).to.equal(0);
     });
 
-    // ── Test 4: calculateGroupBalances — No expenses ─────────────
+    //  Test 4: calculateGroupBalances — No expenses 
     it('should return empty balances and zero total when group has no expenses', async () => {
       const groupId = new mongoose.Types.ObjectId();
 
@@ -136,7 +136,7 @@ describe('SettleUp Service Tests (Facade Pattern)', () => {
     });
   });
 
-  // ── Test 5: getGroupSummary — Success ───────────────────────
+  //  Test 5: getGroupSummary — Success 
   describe('getGroupSummary', () => {
     it('should return correct summary counts and total', async () => {
       const groupId = new mongoose.Types.ObjectId();
@@ -171,7 +171,7 @@ describe('SettleUp Service Tests (Facade Pattern)', () => {
       expect(result.totalSpent).to.equal(100);
     });
 
-    // ── Test 6: getGroupSummary — Group Not Found ────────────────
+    //  Test 6: getGroupSummary — Group Not Found 
     it('should return null if group does not exist', async () => {
       const groupId = new mongoose.Types.ObjectId();
 

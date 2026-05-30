@@ -30,7 +30,7 @@ afterEach(()  => { sandbox.restore(); });
 
 describe('Settlement Controller Tests', () => {
 
-  // ── Test 1: CREATE — Success ────────────────────────────────
+  // Test 1: CREATE — Success 
   describe('createSettlement', () => {
     it('should create a settlement and return 201', async () => {
       const req = {
@@ -55,7 +55,7 @@ describe('Settlement Controller Tests', () => {
       expect(res.json.calledOnce).to.be.true;
     });
 
-    // ── Test 2: CREATE — DB Error ───────────────────────────────
+    // Test 2: CREATE — DB Error
     it('should return 500 if settlement creation fails', async () => {
       const req = {
         user: { id: new mongoose.Types.ObjectId() },
@@ -76,7 +76,7 @@ describe('Settlement Controller Tests', () => {
     });
   });
 
-  // ── Test 3: GET BY GROUP — Success ──────────────────────────
+  // Test 3: GET BY GROUP — Success
   describe('getSettlementsByGroup', () => {
     it('should return all settlements for a group', async () => {
       const groupId         = new mongoose.Types.ObjectId();
@@ -98,7 +98,7 @@ describe('Settlement Controller Tests', () => {
       expect(res.json.calledOnce).to.be.true;
     });
 
-    // ── Test 4: GET BY GROUP — DB Error ─────────────────────────
+    // Test 4: GET BY GROUP — DB Error
     it('should return 500 if fetch fails', async () => {
       const req = { params: { groupId: new mongoose.Types.ObjectId() } };
 
@@ -115,7 +115,7 @@ describe('Settlement Controller Tests', () => {
     });
   });
 
-  // ── Test 5: DELETE — Success ─────────────────────────────────
+  // Test 5: DELETE — Success
   describe('deleteSettlement', () => {
     it('should delete a settlement and return 200', async () => {
       const req = { params: { id: new mongoose.Types.ObjectId() } };
@@ -129,7 +129,7 @@ describe('Settlement Controller Tests', () => {
       expect(res.json.calledOnce).to.be.true;
     });
 
-    // ── Test 6: DELETE — Not Found ───────────────────────────────
+    // Test 6: DELETE — Not Found
     it('should return 404 if settlement not found for deletion', async () => {
       const req = { params: { id: new mongoose.Types.ObjectId() } };
 
@@ -143,7 +143,7 @@ describe('Settlement Controller Tests', () => {
     });
   });
 
-  // ── Test 7 & 8: GET BALANCES — only runs if handler is exported
+  // Test 7 & 8: GET BALANCES — only runs if handler is exported
   describe('getBalances', () => {
     before(function () {
       // Skip gracefully if the function isn't exported under any known name
@@ -156,7 +156,7 @@ describe('Settlement Controller Tests', () => {
       }
     });
 
-    // ── Test 7: GET BALANCES — Success (Facade) ──────────────────
+    //  Test 7: GET BALANCES — Success (Facade)
     it('should return calculated balances using the Facade service', async () => {
       const groupId = new mongoose.Types.ObjectId();
       const req     = { params: { groupId } };
@@ -179,7 +179,7 @@ describe('Settlement Controller Tests', () => {
       expect(settleUpService.calculateGroupBalances.calledOnce).to.be.true;
     });
 
-    // ── Test 8: GET BALANCES — Service Error ────────────────────
+    // Test 8: GET BALANCES — Service Error
     it('should return 500 if balance calculation fails', async () => {
       const req = { params: { groupId: new mongoose.Types.ObjectId() } };
 

@@ -15,14 +15,12 @@ let sandbox;
 beforeEach(() => { sandbox = sinon.createSandbox(); });
 afterEach(()  => { sandbox.restore(); });
 
-// ─────────────────────────────────────────────────────────────
 // Notification Observer Tests — Observer Pattern
 //
 // Tests the PATTERN behaviour — not internal DB operations:
 //   Test 1: registered observers get called when notify fires
 //   Test 2: notify handles null group without throwing (graceful error handling)
 //   Test 3: triggered user is excluded — verified via the notifications array
-// ─────────────────────────────────────────────────────────────
 describe('Notification Observer Tests (Observer Pattern)', () => {
 
 //   // Test 1: Observer.update() is called when notify fires
@@ -105,10 +103,8 @@ describe('Notification Observer Tests (Observer Pattern)', () => {
 });
 
 
-// ─────────────────────────────────────────────────────────────
 // Response Factory Tests — Factory Pattern
 // Shape: { statusCode, body: { success, message, data } }
-// ─────────────────────────────────────────────────────────────
 describe('Response Factory Tests (Factory Pattern)', () => {
 
   it('should create a success response with correct shape', () => {
