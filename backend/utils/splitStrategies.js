@@ -12,7 +12,7 @@
 // OOP PRINCIPLE: Polymorphism - all three strategies have the same calculate() method
 // but each one works differently. The controller calls the same method regardless.
 
-// ── Base Strategy (Abstraction) ──────────────────────────────
+//  Base Strategy (Abstraction)
 // OOP Principle: Abstraction - defines the interface, hides the implementation
 class SplitStrategy {
   // All strategies must implement this method
@@ -21,7 +21,7 @@ class SplitStrategy {
   }
 }
 
-// ── Strategy 1: Equal Split ───────────────────────────────────
+// Strategy 1: Equal Split
 // Everyone pays the same amount
 class EqualSplitStrategy extends SplitStrategy {
   calculate(amount, members) {
@@ -31,7 +31,7 @@ class EqualSplitStrategy extends SplitStrategy {
   }
 }
 
-// ── Strategy 2: Percentage Split ─────────────────────────────
+// Strategy 2: Percentage Split
 // Each member pays a percentage of the total
 // members = [{ name: 'Alex', percentage: 50 }, { name: 'Jessica', percentage: 50 }]
 class PercentageSplitStrategy extends SplitStrategy {
@@ -44,7 +44,7 @@ class PercentageSplitStrategy extends SplitStrategy {
   }
 }
 
-// ── Strategy 3: Exact Split ───────────────────────────────────
+// Strategy 3: Exact Split
 // Each member pays a specific exact amount that is provided
 // members = [{ name: 'Alex', amount: 30 }, { name: 'Jessica', amount: 34 }]
 class ExactSplitStrategy extends SplitStrategy {
@@ -57,7 +57,7 @@ class ExactSplitStrategy extends SplitStrategy {
   }
 }
 
-// ── Factory for Strategies ────────────────────────────────────
+// Factory for Strategies
 // PATTERN: Factory (also used here)
 // Takes a split type string and returns the right strategy object
 // The caller doesn't need to know which class to instantiate

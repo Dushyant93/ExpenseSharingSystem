@@ -8,7 +8,7 @@ const { expect } = chai;
 
 describe('Split Strategy Tests (Strategy Pattern)', () => {
 
-  // ── Test 1: Equal Split ──────────────────────────────────────
+  //  Test 1: Equal Split 
   describe('EqualSplitStrategy', () => {
     it('should split amount equally between all members', () => {
       const strategy = new EqualSplitStrategy();
@@ -27,7 +27,7 @@ describe('Split Strategy Tests (Strategy Pattern)', () => {
     });
   });
 
-  // ── Test 2: Percentage Split ────────────────────────────────
+  // Test 2: Percentage Split
   describe('PercentageSplitStrategy', () => {
     it('should split amount by percentage', () => {
       const strategy = new PercentageSplitStrategy();
@@ -39,7 +39,7 @@ describe('Split Strategy Tests (Strategy Pattern)', () => {
     });
   });
 
-  // ── Test 3: Exact Split ──────────────────────────────────────
+  // Test 3: Exact Split
   describe('ExactSplitStrategy', () => {
     it('should use the exact amounts provided', () => {
       const strategy = new ExactSplitStrategy();
@@ -51,7 +51,7 @@ describe('Split Strategy Tests (Strategy Pattern)', () => {
     });
   });
 
-  // ── Test 4: Factory returns correct strategy ─────────────────
+  // Test 4: Factory returns correct strategy
   describe('getSplitStrategy (Factory)', () => {
     it('should return EqualSplitStrategy for equal', () => {
       const strategy = getSplitStrategy('equal');

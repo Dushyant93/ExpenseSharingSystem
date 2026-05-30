@@ -13,7 +13,7 @@ const {
 
 const { expect } = chai;
 
-// ── Shared sandbox — restores ALL stubs after each test automatically
+//  Shared sandbox - restores ALL stubs after each test automatically
 let sandbox;
 
 beforeEach(() => {
@@ -29,7 +29,7 @@ afterEach(() => {
 
 describe('Expense Controller Tests', () => {
 
-  // ── Test 1: CREATE — Success ───────────────────────────────
+  //  Test 1: CREATE — Success 
   describe('createExpense', () => {
     it('should create an expense and return 201', async () => {
       const req = {
@@ -57,7 +57,7 @@ describe('Expense Controller Tests', () => {
       expect(res.json.calledOnce).to.be.true;
     });
 
-    // ── Test 2: CREATE — DB Error ────────────────────────────
+    //  Test 2: CREATE — DB Error 
     it('should return 500 if creation fails', async () => {
       const req = {
         user: { id: new mongoose.Types.ObjectId() },
@@ -74,7 +74,7 @@ describe('Expense Controller Tests', () => {
     });
   });
 
-  // ── Test 3: READ ALL — Success ────────────────────────────
+  //  Test 3: READ ALL — Success 
   describe('getExpenses', () => {
     it('should return all expenses for logged-in user', async () => {
       const req = { user: { id: new mongoose.Types.ObjectId() } };
@@ -97,7 +97,7 @@ describe('Expense Controller Tests', () => {
       expect(res.json.calledOnce).to.be.true;
     });
 
-    // ── Test 4: READ ALL — DB Error ──────────────────────────
+    //  Test 4: READ ALL — DB Error 
     it('should return 500 if fetch fails', async () => {
       const req = { user: { id: new mongoose.Types.ObjectId() } };
 
@@ -114,7 +114,7 @@ describe('Expense Controller Tests', () => {
     });
   });
 
-  // ── Test 5: UPDATE — Success ──────────────────────────────
+  //  Test 5: UPDATE — Success 
   describe('updateExpense', () => {
     it('should update an expense and return 200', async () => {
       const mockId = new mongoose.Types.ObjectId();
@@ -131,7 +131,7 @@ describe('Expense Controller Tests', () => {
       expect(res.json.calledOnce).to.be.true;
     });
 
-    // ── Test 6: UPDATE — Not Found ───────────────────────────
+    //  Test 6: UPDATE — Not Found ─
     it('should return 404 if expense not found', async () => {
       const req = { params: { id: new mongoose.Types.ObjectId() }, body: {} };
 
@@ -145,7 +145,7 @@ describe('Expense Controller Tests', () => {
     });
   });
 
-  // ── Test 7: DELETE — Success ──────────────────────────────
+  //  Test 7: DELETE — Success 
   describe('deleteExpense', () => {
     it('should delete an expense and return 200', async () => {
       const req = { params: { id: new mongoose.Types.ObjectId() } };
@@ -159,7 +159,7 @@ describe('Expense Controller Tests', () => {
       expect(res.json.calledOnce).to.be.true;
     });
 
-    // ── Test 8: DELETE — Not Found ───────────────────────────
+    //  Test 8: DELETE — Not Found 
     it('should return 404 if expense not found for deletion', async () => {
       const req = { params: { id: new mongoose.Types.ObjectId() } };
 
