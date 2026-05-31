@@ -8,8 +8,9 @@ Built with **Node.js + Express + MongoDB** (backend) and **React.js** (frontend)
 ## Public URL
 
 ```
-<EC2 public IP>
+http://settleup-alb-326725722.ap-southeast-2.elb.amazonaws.com
 ```
+<img width="625" height="885" alt="image" src="https://github.com/user-attachments/assets/6e0bb8de-14f3-4b2e-9bbd-aafa3dc4b6b3" />
 
 ---
 
